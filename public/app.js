@@ -2,10 +2,20 @@ let fetchAndUpdate = async () => {
     let response = await fetch('/messages')
     let responseBody = await response.text()
     let parsed = JSON.parse(responseBody)
+    let messages = parsed.msgs
+    let userColors = parsed.colors
     let msgListUL = document.getElementById('msg-list')
     msgListUL.innerHTML = ""
-    parsed.forEach(elem => {
+    messages.forEach(elem => {
+        // Default color is black
+        let usernameColor = "black"
+        if (userColors[elem.user] !== undefined) {
+            // The user has explicitly set their username color
+            usernameColor = userColors[elem.user]
+        }
         let li = document.createElement("li")
+        // User the style property to change the color
+        li.style.color = usernameColor
         li.innerText = elem.user + ": " + elem.msg
         msgListUL.append(li)
     })

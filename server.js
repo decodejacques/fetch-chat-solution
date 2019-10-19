@@ -7,6 +7,7 @@ app.use(cookieParser())
 let passwordsAssoc = {}
 let sessions = {}
 let messages = []
+let usernameColor = {}
 app.use('/static', express.static(__dirname + '/public'))
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
@@ -22,7 +23,7 @@ app.post("/messages", upload.none(), (req, res) => {
 })
 app.get("/messages", (req, res) => {
   console.log('Sending back the messages')
-  res.send(JSON.stringify(messages))
+  res.send(JSON.stringify({ msgs: messages, colors: usernameColor }))
 })
 app.post("/signup", upload.none(), (req, res) => {
   let username = req.body.username
@@ -77,4 +78,26 @@ app.post("/change-username", upload.none(), (req, res) => {
 
   res.sendFile(__dirname + '/public/chat.html')
 })
+
+app.post('/color-pink', (req, res) => {
+  console.log("changing to pink")
+  let username = sessions[req.cookies["sid"]]
+  usernameColor[username] = "pink"
+  res.sendFile(__dirname + '/public/chat.html')
+})
+
+app.post('/color-black', (req, res) => {
+  console.log("changing to black")
+  let username = sessions[req.cookies["sid"]]
+  usernameColor[username] = "black"
+  res.sendFile(__dirname + '/public/chat.html')
+})
+
+app.post('/color-red', (req, res) => {
+  console.log("changing to red")
+  let username = sessions[req.cookies["sid"]]
+  usernameColor[username] = "red"
+  res.sendFile(__dirname + '/public/chat.html')
+})
+
 app.listen(4000) 
