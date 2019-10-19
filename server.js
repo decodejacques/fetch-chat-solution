@@ -68,6 +68,13 @@ app.post("/change-username", upload.none(), (req, res) => {
       sessions[sid] = newUsername
     }
   })
+
+  messages.forEach(msg => {
+    if (msg.user === oldUsername) {
+      msg.user = newUsername
+    }
+  })
+
   res.sendFile(__dirname + '/public/chat.html')
 })
 app.listen(4000) 
