@@ -39,4 +39,20 @@ let fetchAndUpdate = async () => {
 
 }
 fetchAndUpdate()
-setInterval(fetchAndUpdate, 500) 
+setInterval(fetchAndUpdate, 500)
+
+
+let messageForm = document.getElementById("message-form")
+// Perform an action when the form is submitted
+messageForm.addEventListener('submit', ev => {
+    // stop the page from reloading
+    ev.preventDefault()
+    // prepare the HTTP request body
+    let data = new FormData()
+    // You can find these ids in chat.html
+    let msgText = document.getElementById("message-text").value
+    let file = document.getElementById("message-file").files[0]
+    data.append("message", msgText)
+    data.append("img", file)
+    fetch('/messages', { method: "POST", body: data })
+})
