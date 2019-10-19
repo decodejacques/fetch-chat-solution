@@ -10,6 +10,7 @@ let sessions = {}
 let messages = []
 let usernameColor = {}
 let ignoredBy = {}
+let chatTopic = ""
 app.use('/static', express.static(__dirname + '/public'))
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
@@ -41,7 +42,12 @@ app.get("/messages", (req, res) => {
     // returns true if and only if msg.user is not in the ignored list of username
     return ignoredBy[username].indexOf(msg.user) === -1
   })
-  res.send(JSON.stringify({ msgs: msgs, colors: usernameColor, ignoredBy: ignoredBy }))
+  res.send(JSON.stringify({
+    msgs: msgs,
+    colors: usernameColor,
+    ignoredBy: ignoredBy,
+    topic: chatTopic
+  }))
 })
 app.post("/signup", upload.none(), (req, res) => {
   let username = req.body.username
@@ -126,6 +132,12 @@ app.post('/ignore-user', upload.none(), (req, res) => {
     ignoredBy[username] = []
   }
   ignoredBy[username].push(annoyingUsername)
+  res.sendFile(__dirname + '/public/chat.html')
+})
+
+app.post('/topic', upload.none(), (req, res) => {
+  console.log("Ignoring user", req.body)
+  chatTopic = req.body["chat-topic"]
   res.sendFile(__dirname + '/public/chat.html')
 })
 

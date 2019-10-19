@@ -2,6 +2,7 @@ let fetchAndUpdate = async () => {
     let response = await fetch('/messages')
     let responseBody = await response.text()
     let parsed = JSON.parse(responseBody)
+    document.getElementById("main-topic").innerText = parsed.topic
     let messages = parsed.msgs
     let userColors = parsed.colors
     let msgListUL = document.getElementById('msg-list')

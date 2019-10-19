@@ -1,6 +1,7 @@
 <html>
 
 <body>
+  <div id="main-topic"></div>
   <ul id="msg-list"></ul>
 
   <form action="/messages" method="POST" enctype="multipart/form-data">
@@ -36,6 +37,13 @@
     <input type="text" name="annoying-username" />
     <input type="submit"></input>
   </form>
+
+  Set topic
+  <form action="/topic" method="POST" enctype="multipart/form-data">
+    <input type="text" name="chat-topic" />
+    <input type="submit"></input>
+  </form>
+
 
   <script src="/static/app.js"></script>
 </body>
