@@ -2,7 +2,8 @@ let express = require("express")
 let app = express()
 let cookieParser = require('cookie-parser')
 let multer = require("multer")
-let upload = multer()
+let upload = multer({ dest: __dirname + '/imgs/' })
+app.use('/images', express.static(__dirname + '/imgs'))
 app.use(cookieParser())
 let passwordsAssoc = {}
 let sessions = {}
@@ -12,9 +13,18 @@ app.use('/static', express.static(__dirname + '/public'))
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
 })
-app.post("/messages", upload.none(), (req, res) => {
-  console.log('POST messages body', req.body)
+app.post("/messages", upload.single('img'), (req, res) => {
+  console.log('POST messages body', req.body, req.file)
+
+  let file = req.file
+  let frontendPath = undefined
+  if (file !== undefined) {
+    // User actually uploaded an image
+    frontendPath = '/images/' + file.filename
+  }
+
   let newMessage = {
+    imgPath: frontendPath,
     user: sessions[req.cookies["sid"]],
     msg: req.body.message
   }

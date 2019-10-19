@@ -18,6 +18,12 @@ let fetchAndUpdate = async () => {
         li.style.color = usernameColor
         li.innerText = elem.user + ": " + elem.msg
         msgListUL.append(li)
+        if (elem.imgPath) {
+            let imgli = document.createElement("li")
+            // quick hack so we don't have to go through the whole DOM node creation process
+            imgli.innerHTML = '<img height="100px" src="' + elem.imgPath + '"/>'
+            msgListUL.append(imgli)
+        }
     })
 }
 fetchAndUpdate()
