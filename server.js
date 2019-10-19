@@ -9,6 +9,7 @@ let passwordsAssoc = {}
 let sessions = {}
 let messages = []
 let usernameColor = {}
+let ignoredBy = {}
 app.use('/static', express.static(__dirname + '/public'))
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html")
@@ -33,7 +34,14 @@ app.post("/messages", upload.single('img'), (req, res) => {
 })
 app.get("/messages", (req, res) => {
   console.log('Sending back the messages')
-  res.send(JSON.stringify({ msgs: messages, colors: usernameColor }))
+  let username = sessions[req.cookies["sid"]]
+  let msgs = messages.filter(msg => {
+    // if the user isn't ignoring anyone, include the msg
+    if (ignoredBy[username] === undefined) return true
+    // returns true if and only if msg.user is not in the ignored list of username
+    return ignoredBy[username].indexOf(msg.user) === -1
+  })
+  res.send(JSON.stringify({ msgs: msgs, colors: usernameColor, ignoredBy: ignoredBy }))
 })
 app.post("/signup", upload.none(), (req, res) => {
   let username = req.body.username
@@ -109,5 +117,17 @@ app.post('/color-red', (req, res) => {
   usernameColor[username] = "red"
   res.sendFile(__dirname + '/public/chat.html')
 })
+
+app.post('/ignore-user', upload.none(), (req, res) => {
+  console.log("Ignoring user", req.body)
+  let username = sessions[req.cookies["sid"]]
+  let annoyingUsername = req.body["annoying-username"]
+  if (ignoredBy[username] === undefined) {
+    ignoredBy[username] = []
+  }
+  ignoredBy[username].push(annoyingUsername)
+  res.sendFile(__dirname + '/public/chat.html')
+})
+
 
 app.listen(4000) 
