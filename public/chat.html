@@ -1,51 +1,56 @@
 <html>
 
 <body>
-  <div id="main-topic"></div>
-  <ul id="msg-list"></ul>
+  <div style="display: flex">
+    <div>
+      <div id="main-topic"></div>
+      <ul id="msg-list"></ul>
 
-  <form action="/messages" method="POST" enctype="multipart/form-data">
-    File
-    <input type="file" name="img" />
-    Message
-    <input type="text" name="message"></input>
-    <input type="submit"></input>
-  </form>
-  Change username
-  <form action="/change-username" method="POST" enctype="multipart/form-data">
-    <input type="text" name="new-name"></input>
-    <input type="submit"></input>
-  </form>
+      <form action="/messages" method="POST" enctype="multipart/form-data">
+        File
+        <input type="file" name="img" />
+        Message
+        <input type="text" name="message"></input>
+        <input type="submit"></input>
+      </form>
+      Change username
+      <form action="/change-username" method="POST" enctype="multipart/form-data">
+        <input type="text" name="new-name"></input>
+        <input type="submit"></input>
+      </form>
 
-  Change to pink
-  <form action="/color-pink" method="POST" enctype="multipart/form-data">
-    <input type="submit"></input>
-  </form>
+      Change to pink
+      <form action="/color-pink" method="POST" enctype="multipart/form-data">
+        <input type="submit"></input>
+      </form>
 
-  Change to black
-  <form action="/color-black" method="POST" enctype="multipart/form-data">
-    <input type="submit"></input>
-  </form>
+      Change to black
+      <form action="/color-black" method="POST" enctype="multipart/form-data">
+        <input type="submit"></input>
+      </form>
 
-  Change to red
-  <form action="/color-red" method="POST" enctype="multipart/form-data">
-    <input type="submit"></input>
-  </form>
+      Change to red
+      <form action="/color-red" method="POST" enctype="multipart/form-data">
+        <input type="submit"></input>
+      </form>
 
-  Ignore user
-  <form action="/ignore-user" method="POST" enctype="multipart/form-data">
-    <input type="text" name="annoying-username" />
-    <input type="submit"></input>
-  </form>
+      Ignore user
+      <form action="/ignore-user" method="POST" enctype="multipart/form-data">
+        <input type="text" name="annoying-username" />
+        <input type="submit"></input>
+      </form>
 
-  Set topic
-  <form action="/topic" method="POST" enctype="multipart/form-data">
-    <input type="text" name="chat-topic" />
-    <input type="submit"></input>
-  </form>
+      Set topic
+      <form action="/topic" method="POST" enctype="multipart/form-data">
+        <input type="text" name="chat-topic" />
+        <input type="submit"></input>
+      </form>
 
 
-  <script src="/static/app.js"></script>
+      <script src="/static/app.js"></script>
+    </div>
+    <div id="active-users" />
+  </div>
 </body>
 
 </html>

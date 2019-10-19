@@ -26,6 +26,17 @@ let fetchAndUpdate = async () => {
             msgListUL.append(imgli)
         }
     })
+    let activeUsersDiv = document.getElementById("active-users")
+    // clear the active users div from chat.html
+    activeUsersDiv.innerHTML = ""
+    // add all the users from the activeusers property of the response
+    // see what is sent back from the /messages endpoint
+    parsed.active.forEach(username => {
+        let userDiv = document.createElement("div")
+        userDiv.innerText = username
+        activeUsersDiv.append(userDiv)
+    })
+
 }
 fetchAndUpdate()
 setInterval(fetchAndUpdate, 500) 

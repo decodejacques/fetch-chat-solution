@@ -10,6 +10,7 @@ let sessions = {}
 let messages = []
 let usernameColor = {}
 let ignoredBy = {}
+let lastMessageTimestamp = {}
 let chatTopic = ""
 app.use('/static', express.static(__dirname + '/public'))
 app.get("/", (req, res) => {
@@ -17,6 +18,9 @@ app.get("/", (req, res) => {
 })
 app.post("/messages", upload.single('img'), (req, res) => {
   console.log('POST messages body', req.body, req.file)
+  let username = sessions[req.cookies["sid"]]
+  // Date.now() is the number of milliseconds since January 1st, 1970
+  lastMessageTimestamp[username] = Date.now()
 
   let file = req.file
   let frontendPath = undefined
@@ -27,7 +31,7 @@ app.post("/messages", upload.single('img'), (req, res) => {
 
   let newMessage = {
     imgPath: frontendPath,
-    user: sessions[req.cookies["sid"]],
+    user: username,
     msg: req.body.message
   }
   messages.push(newMessage)
@@ -42,11 +46,19 @@ app.get("/messages", (req, res) => {
     // returns true if and only if msg.user is not in the ignored list of username
     return ignoredBy[username].indexOf(msg.user) === -1
   })
+
+  let activeUsers = Object.keys(lastMessageTimestamp)
+  activeUsers = activeUsers.filter(user => {
+    let timestamp = lastMessageTimestamp[user]
+    // Date.now - (5 * 60 * 1000) is the timestamp from 5 minutes ago
+    return timestamp > Date.now() - (5 * 60 * 1000)
+  })
   res.send(JSON.stringify({
     msgs: msgs,
     colors: usernameColor,
     ignoredBy: ignoredBy,
-    topic: chatTopic
+    topic: chatTopic,
+    active: activeUsers
   }))
 })
 app.post("/signup", upload.none(), (req, res) => {
