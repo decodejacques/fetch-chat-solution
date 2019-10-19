@@ -43,4 +43,26 @@ app.post("/login", upload.none(), (req, res) => {
   res.cookie('sid', sid)
   res.sendFile(__dirname + '/public/chat.html')
 })
+app.post("/change-username", upload.none(), (req, res) => {
+  console.log('Changing username', req.body)
+
+  let oldUsername = sessions[req.cookies["sid"]]
+  let newUsername = req.body["new-name"]
+
+  // change the username in the passwordsAssoc object
+  let password = passwordsAssoc[oldUsername]
+  passwordsAssoc[newUsername] = password
+  // delete the property from the passwordsAssoc object
+  // `passwordsAssoc[oldUsername] = undefined` could also work
+  delete passwordsAssoc[oldUsername]
+
+  // change the usernames in the sessions object
+  let sessionIds = Object.keys(sessions)
+  sessionIds.forEach(sid => {
+    if (sessions[sid] === oldUsername) {
+      sessions[sid] = newUsername
+    }
+  })
+  res.sendFile(__dirname + '/public/chat.html')
+})
 app.listen(4000) 
