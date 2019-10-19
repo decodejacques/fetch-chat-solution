@@ -49,6 +49,11 @@ app.post("/change-username", upload.none(), (req, res) => {
   let oldUsername = sessions[req.cookies["sid"]]
   let newUsername = req.body["new-name"]
 
+  if (passwordsAssoc[newUsername] !== undefined) {
+    res.sendFile(__dirname + '/public/chat.html')
+    return
+  }
+
   // change the username in the passwordsAssoc object
   let password = passwordsAssoc[oldUsername]
   passwordsAssoc[newUsername] = password
