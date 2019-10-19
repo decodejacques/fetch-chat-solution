@@ -65,20 +65,22 @@ app.post("/signup", upload.none(), (req, res) => {
   let username = req.body.username
   let password = req.body.password
   passwordsAssoc[username] = password
-  res.send("<html><body> signup successful </body></html>")
+  res.send(JSON.stringify({ success: true }))
 })
 app.post("/login", upload.none(), (req, res) => {
   let username = req.body.username
   let passwordGiven = req.body.password
   let expectedPassword = passwordsAssoc[username]
   if (expectedPassword !== passwordGiven) {
-    res.send("<html><body> invalid username or password </body></html>")
+    res.send(JSON.stringify({ success: false }))
+
     return
   }
   let sid = Math.floor(Math.random() * 10000000)
   sessions[sid] = username
   res.cookie('sid', sid)
-  res.sendFile(__dirname + '/public/chat.html')
+  res.send(JSON.stringify({ success: true }))
+
 })
 app.post("/change-username", upload.none(), (req, res) => {
   console.log('Changing username', req.body)

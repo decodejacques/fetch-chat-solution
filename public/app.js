@@ -1,3 +1,62 @@
+let loadChatPage = () => {
+    let body = document.querySelector('body')
+
+    // I removed the forms relating to changing the text color,
+    // changing your username and ignore a user.
+    // Try it add them back to make sure
+    // you really understand this solution
+
+    body.innerHTML =
+        `<html>
+
+<head>
+  <style>
+    .two-column {
+      display: flex
+    }
+  </style>
+</head>
+
+<body>
+  <div class="two-column">
+    <div>
+      <div id="main-topic"></div>
+      <ul id="msg-list"></ul>
+
+      <form id="message-form">
+        File
+        <input id="message-file" type="file" />
+        Message
+        <input id="message-text" type="text"></input>
+        <input type="submit"></input>
+      </form>
+   
+
+    </div>
+    <div id="active-users" />
+  </div>
+</body>
+
+</html>`
+
+
+    let messageForm = document.getElementById("message-form")
+    // Perform an action when the form is submitted
+    messageForm.addEventListener('submit', ev => {
+        // stop the page from reloading
+        ev.preventDefault()
+        // prepare the HTTP request body
+        let data = new FormData()
+        // You can find these ids in chat.html
+        let msgText = document.getElementById("message-text").value
+        let file = document.getElementById("message-file").files[0]
+        data.append("message", msgText)
+        data.append("img", file)
+        fetch('/messages', { method: "POST", body: data })
+    })
+
+}
+
 let fetchAndUpdate = async () => {
     let response = await fetch('/messages')
     let responseBody = await response.text()
@@ -36,23 +95,41 @@ let fetchAndUpdate = async () => {
         userDiv.innerText = username
         activeUsersDiv.append(userDiv)
     })
-
 }
-fetchAndUpdate()
-setInterval(fetchAndUpdate, 500)
 
 
-let messageForm = document.getElementById("message-form")
-// Perform an action when the form is submitted
-messageForm.addEventListener('submit', ev => {
-    // stop the page from reloading
+
+
+let signupForm = document.getElementById('signup-form')
+signupForm.addEventListener('submit', async ev => {
     ev.preventDefault()
-    // prepare the HTTP request body
-    let data = new FormData()
-    // You can find these ids in chat.html
-    let msgText = document.getElementById("message-text").value
-    let file = document.getElementById("message-file").files[0]
-    data.append("message", msgText)
-    data.append("img", file)
-    fetch('/messages', { method: "POST", body: data })
+    let formData = new FormData()
+    formData.append('username', document.getElementById('signup-username').value)
+    formData.append('password', document.getElementById('signup-password').value)
+    let responseObject = await fetch('/signup', { method: "POST", body: formData })
+    let responseBody = await responseObject.text()
+    let parsedBody = JSON.parse(responseBody)
+    if (parsedBody.success) {
+        alert("signup successful")
+    } else {
+        alert("signup failed")
+    }
+})
+
+let loginForm = document.getElementById('login-form')
+loginForm.addEventListener('submit', async ev => {
+    ev.preventDefault()
+    let formData = new FormData()
+    formData.append('username', document.getElementById('signup-username').value)
+    formData.append('password', document.getElementById('signup-password').value)
+    let responseObject = await fetch('/login', { method: "POST", body: formData })
+    let responseBody = await responseObject.text()
+    let parsedBody = JSON.parse(responseBody)
+    if (parsedBody.success) {
+        loadChatPage()
+        fetchAndUpdate()
+        setInterval(fetchAndUpdate, 500)
+    } else {
+        alert("invalid login")
+    }
 })
